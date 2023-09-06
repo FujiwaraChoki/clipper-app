@@ -2,29 +2,26 @@ const { initializeApp } = require('firebase/app');
 const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } = require('firebase/auth');
 
 const firebaseConfig = {
-    apiKey: "AIzaSyD5jv0tjEIvvGJDwdDtKZU_PpqXv9u-5QU",
+    apiKey: process.env['API_KEY'],
     authDomain: "getclipper.firebaseapp.com",
     projectId: "getclipper",
     storageBucket: "getclipper.appspot.com",
-    messagingSenderId: "781625170618",
-    appId: "1:781625170618:web:c678ffd2b44b3f66aa0083"
+    messagingSenderId: process.env['MESSAGING_SENDER_ID'],
+    appId: process.env['APP_ID']
 };
 
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
 
-const createUser = (name, email, password) => {
+const createUser = async (name, email, password) => {
     console.log('Adding user:', { email, name });
 
-    // Create user with email and password
-    createUserWithEmailAndPassword(auth, email, password)
+    await createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            // Signed in
             const { user } = userCredential;
             const { uid } = user;
 
-            // Set the user's name
             updateProfile(user, {
                 displayName: name,
             }).then(() => {
@@ -42,9 +39,8 @@ const createUser = (name, email, password) => {
         });
 };
 
-const getUser = (uid) => {
-    getAuth().getUser(uid).then((userRecord) => {
-        // See the UserRecord reference doc for the contents of userRecord.
+const getUser = async (uid) => {
+    await getAuth().getUser(uid).then((userRecord) => {
         console.log('Successfully fetched user data:', userRecord.toJSON());
         return userRecord.toJSON();
     }).catch((error) => {
@@ -53,9 +49,26 @@ const getUser = (uid) => {
     });
 };
 
+const login = async (email, password) => {
+    let userAbove = null;
+
+    await signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            const { user } = userCredential;
+
+            userAbove = user.toJSON();
+        });
+
+    return {
+        uid: userAbove.uid,
+        name: userAbove.displayName,
+        email: userAbove.email,
+    };
+};
+
 
 module.exports = {
     createUser,
     getUser,
-    signInWithEmailAndPassword
+    login
 };

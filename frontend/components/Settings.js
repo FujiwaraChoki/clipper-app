@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
-import { View, Text, Switch, StyleSheet } from 'react-native';
+import { useState, useContext, useEffect } from 'react';
+import { View, Text, Switch, TouchableOpacity, StyleSheet } from 'react-native';
+import { useNavigate } from 'react-router-native';
 
 import Navbar from './Navbar';
+import { UserContext } from '../contexts/UserContext';
 
 const Settings = () => {
     const [isLightOn, setIsLightOn] = useState(true);
     const [isDarkMode, setIsDarkMode] = useState(false);
+    const [user, setUser] = useContext(UserContext);
+    const navigate = useNavigate();
 
     const toggleLight = () => {
         setIsLightOn(!isLightOn);
@@ -15,7 +19,10 @@ const Settings = () => {
         setIsDarkMode(!isDarkMode);
     };
 
-    // Apply the user's preferences to the app's theme
+    const handleLogout = () => {
+        setUser([]);
+    };
+
     const backgroundStyle = {
         backgroundColor: isDarkMode ? 'black' : isLightOn ? 'white' : 'gray',
     };
@@ -24,6 +31,12 @@ const Settings = () => {
         color: isDarkMode ? 'white' : 'black',
         fontSize: 20,
     };
+
+    useEffect(() => {
+        if (user?.length === 0) {
+            navigate('/login');
+        }
+    });
 
     return (
         <>
@@ -47,6 +60,9 @@ const Settings = () => {
                         thumbColor={isDarkMode ? 'white' : 'gray'}
                     />
                 </View>
+                <TouchableOpacity style={styles.button} onPress={handleLogout}>
+                    <Text style={styles.buttonText}>Logout</Text>
+                </TouchableOpacity>
             </View>
             <Navbar />
         </>
@@ -61,12 +77,26 @@ const styles = StyleSheet.create({
     },
     title: {
         marginBottom: 20,
-        fontSize: 28,
+        fontSize: 30,
+        fontWeight: 'bold',
     },
     settingRow: {
         flexDirection: 'row',
         alignItems: 'center',
         marginTop: 10,
+    },
+    button: {
+        backgroundColor: 'blue',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+        marginTop: 20,
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
     },
 });
 

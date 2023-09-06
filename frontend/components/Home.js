@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, Modal, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigate } from 'react-router-native';
+import { UserContext } from '../contexts/UserContext';
 
 import * as Clipboard from 'expo-clipboard';
 import ClipboardItem from './ClipboardItem';
 import Navbar from './Navbar';
-import useUser from '../hooks/useUser';
 
 const Home = () => {
     const [history, setHistory] = useState([]);
     const [isModalVisible, setModalVisible] = useState(false);
     const [newHistoryItem, setNewHistoryItem] = useState('');
     const navigate = useNavigate();
-    const user = useUser();
+    const [user, setUser] = useContext(UserContext);
 
     const getClipboard = async () => {
         const clipboard = await Clipboard.getStringAsync();
@@ -20,6 +20,7 @@ const Home = () => {
     };
 
     const callHistoryApi = async () => {
+        if (!user.uid) return;
         try {
             await fetch(`http://192.168.1.14:3000/history/${user.uid}`)
                 .then((res) => res.json())
@@ -28,9 +29,12 @@ const Home = () => {
                     setHistory(data);
                 });
         } catch (error) {
-            console.log(response.text());
             console.error('Error fetching history:', error);
         }
+    };
+
+    const generateId = () => {
+        return Math.random().toString(36).substr(2, 9);
     };
 
     const addHistoryItem = async (item) => {
@@ -54,8 +58,9 @@ const Home = () => {
                     item: {
                         text: item,
                         date: new Date().toLocaleString(),
+                        id: generateId(),
                     },
-                    uid: '1234',
+                    uid: user.uid,
                 }),
             });
 
@@ -64,10 +69,12 @@ const Home = () => {
     };
 
     useEffect(() => {
-        if (user.length === 0) {
+        if (user?.length === 0) {
             navigate('/login');
         }
+    }, [user]);
 
+    useEffect(() => {
         console.log("USER: ", user);
 
         getClipboard();
@@ -81,7 +88,7 @@ const Home = () => {
         <>
             <View style={styles.page}>
                 <View style={styles.historyContainer}>
-                    <Text style={styles.historyHeader}>History:</Text>
+                    <Text style={styles.historyHeader}>History</Text>
                     <TouchableOpacity
                         style={styles.addButton}
                         onPress={() => setModalVisible(true)}
@@ -89,7 +96,7 @@ const Home = () => {
                         <Text style={styles.buttonText}>Add to Clipboard</Text>
                     </TouchableOpacity>
                     {history.map((item, index) => (
-                        <ClipboardItem item={item} key={index} />
+                        <ClipboardItem historyState={{ history, setHistory }} item={item} key={index} />
                     ))}
                 </View>
             </View>

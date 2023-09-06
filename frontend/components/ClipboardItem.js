@@ -1,9 +1,14 @@
 import { View, Text, Button, StyleSheet, Alert } from "react-native";
+import { useState, useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 
 import * as Clipboard from 'expo-clipboard';
 
-const ClipboardItem = ({ item }) => {
+const ClipboardItem = ({ item, historyState }) => {
     const { text, date } = item;
+    const [state, setState] = useState('Delete');
+    const [user, setUser] = useContext(UserContext);
+    const { history, setHistory } = historyState;
 
     const copyToClipboard = async () => {
         await Clipboard.setStringAsync(text);
@@ -27,9 +32,21 @@ const ClipboardItem = ({ item }) => {
                         textStyle={styles.copyButtonText}
                     />
                     <Button
-                        title="Delete"
-                        onPress={() => {
-                            // Handle delete functionality here
+                        title={state}
+                        onPress={async () => {
+                            setState('Deleting...');
+
+                            const response = await fetch(`http://192.168.1.14:3000/history/${user.uid}/${item.id}`, {
+                                method: 'DELETE',
+                            }).then((res) => res.json()).catch((err) => console.log(err));
+
+                            console.log('Response:', response);
+
+                            Alert.alert("Success!", "Deleted.");
+                            setState('Deleted');
+
+                            const newHistory = history.filter((historyItem) => historyItem.id !== item.id);
+                            setHistory(newHistory);
                         }}
                         style={styles.deleteButton}
                         textStyle={styles.deleteButtonText}
@@ -94,4 +111,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ClipboardItem;
+export default ClipboardItem;;

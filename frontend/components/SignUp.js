@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigate } from 'react-router-native';
 
 import Navbar from './Navbar';
@@ -14,17 +14,13 @@ const SignUp = () => {
 
     const handleSignUp = async () => {
         try {
-            const response = await fetch('http://192.168.1.14:3000/user/signup', {
+            await fetch('http://192.168.1.14:3000/user/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ name, email, password }),
             }).then((res) => res.json()).catch((err) => console.log(err));
-
-            if (data.error) {
-                setError(data.error);
-            }
 
             navigate('/login');
         } catch (error) {
@@ -73,12 +69,15 @@ const SignUp = () => {
                         secureTextEntry
                     />
                 </View>
-                <Button title="Sign Up" onPress={handleSignUp} style={styles.signUpButton} textStyle={styles.signUpButtonText} />
+
+                <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
+                    <Text style={styles.signUpButtonText}>Sign Up</Text>
+                </TouchableOpacity>
 
                 <Text style={{ marginTop: 20 }}>
                     Already have an account?{' '}
                     <Text
-                        style={{ color: '#007AFF' }}
+                        style={{ color: '#007AFF', fontSize: 18 }}
                         onPress={() => navigate('/login')}
                     >
                         Login
@@ -97,8 +96,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     heading: {
-        fontSize: 24,
+        fontSize: 30,
         marginBottom: 20,
+        fontWeight: 'bold',
     },
     errorText: {
         color: 'red',
@@ -114,14 +114,20 @@ const styles = StyleSheet.create({
         borderColor: 'gray',
         paddingLeft: 10,
         borderRadius: 5,
+        fontSize: 18,
     },
     signUpButton: {
-        backgroundColor: '#007AFF',
-        padding: 10,
-        borderRadius: 5,
+        backgroundColor: 'blue',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+        marginTop: 20,
     },
     signUpButtonText: {
         color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
     },
 });
 

@@ -1,8 +1,7 @@
-import { View, StyleSheet } from "react-native";
-import { Link } from "react-router-native";
-
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faMessage, faGear, faAddressCard, faHome } from "@fortawesome/free-solid-svg-icons";
+import { View, StyleSheet } from "react-native";
+import { Link } from "react-router-native";
 
 import StyledText from "./StyledText";
 

@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigate } from 'react-router-native';
 import { UserContext } from '../contexts/UserContext';
 
@@ -22,17 +22,20 @@ const Login = () => {
                 body: JSON.stringify({ email, password }),
             });
 
-            const data = await response.json();
-
-            if (data.error) {
-                setError(data.error);
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                console.error('Error logging in:', errorMessage);
+                setError('Error logging in: ' + errorMessage);
+                return;
             }
 
-            console.log('Login response:', data);
+            const data = await response.json();
+
             setUser(data);
+            navigate('/');
         } catch (error) {
             console.error('Error logging in:', error);
-            setError('Error logging in');
+            setError('Error logging in: ' + error.message);
         }
     };
 
@@ -60,17 +63,14 @@ const Login = () => {
                     />
                 </View>
 
-                <Button
-                    title="Login"
-                    onPress={handleLogin}
-                    style={styles.loginButton}
-                    textStyle={styles.loginButtonText}
-                />
+                <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+                    <Text style={styles.loginButtonText}>Login</Text>
+                </TouchableOpacity>
 
                 <Text style={{ marginTop: 20 }}>
                     Don't have an account?{' '}
                     <Text
-                        style={{ color: '#007AFF' }}
+                        style={{ color: '#007AFF', fontSize: 18 }}
                         onPress={() => navigate('/signup')}
                     >
                         Sign up
@@ -89,8 +89,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     heading: {
-        fontSize: 24,
+        fontSize: 30,
         marginBottom: 20,
+        fontWeight: 'bold',
     },
     errorText: {
         color: 'red',
@@ -106,15 +107,20 @@ const styles = StyleSheet.create({
         borderColor: 'gray',
         paddingLeft: 10,
         borderRadius: 5,
+        fontSize: 18,
     },
     loginButton: {
-        backgroundColor: '#007AFF',
-        padding: 10,
-        borderRadius: 5,
+        backgroundColor: 'blue',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+        marginTop: 20,
     },
     loginButtonText: {
         color: 'white',
+        fontSize: 18,
         fontWeight: 'bold',
+        textAlign: 'center',
     },
 });
 

@@ -4,7 +4,7 @@
   "description": "Backend for Clipper App.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "keywords": [
     "react-native",
