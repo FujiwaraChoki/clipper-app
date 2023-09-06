@@ -17,8 +17,15 @@ const About = () => {
 
     return (
         <>
-            <View style={styles.page}>
-                <Text style={styles.header}>About</Text>
+            <View style={styles.container}>
+                <Text style={styles.title}>About Us</Text>
+                <Text style={styles.description}>
+                    Clipper is an App that allows you to view your clipboard history, shared across
+                    all your devices. It is built with React Native, Expo, and Node.js.
+
+                    This app was created by:
+                    <Text style={{ fontWeight: 'bold' }}> Sami Hindi</Text>
+                </Text>
             </View>
             <Navbar />
         </>
@@ -27,15 +34,20 @@ const About = () => {
 
 
 const styles = StyleSheet.create({
-    page: {
+    container: {
         flex: 1,
-        alignItems: 'center',
         justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
     },
-    header: {
-        marginBottom: 20,
+    title: {
         fontSize: 30,
         fontWeight: 'bold',
+        marginBottom: 20,
+    },
+    description: {
+        fontSize: 18,
+        textAlign: 'center',
     },
 });
 
