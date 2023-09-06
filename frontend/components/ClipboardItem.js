@@ -1,6 +1,8 @@
-import { View, Text, Button, StyleSheet, Alert } from "react-native";
-import { useState, useContext } from "react";
+import React, { useState, useContext } from "react";
+import { View, Text, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import { UserContext } from "../contexts/UserContext";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faCopy, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import * as Clipboard from 'expo-clipboard';
 
@@ -22,17 +24,16 @@ const ClipboardItem = ({ item, historyState }) => {
                     <Text style={styles.date}>{date}</Text>
                 </View>
                 <View style={styles.copyButtonContainer}>
-                    <Button
-                        title="Copy"
+                    <TouchableOpacity
                         onPress={() => {
                             copyToClipboard();
                             Alert.alert("Success!", "Copied to clipboard.");
                         }}
                         style={styles.copyButton}
-                        textStyle={styles.copyButtonText}
-                    />
-                    <Button
-                        title={state}
+                    >
+                        <FontAwesomeIcon icon={faCopy} color="#FFFFFF" size={20} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
                         onPress={async () => {
                             setState('Deleting...');
 
@@ -49,8 +50,9 @@ const ClipboardItem = ({ item, historyState }) => {
                             setHistory(newHistory);
                         }}
                         style={styles.deleteButton}
-                        textStyle={styles.deleteButtonText}
-                    />
+                    >
+                        <FontAwesomeIcon icon={faTrash} color="#FFFFFF" size={20} />
+                    </TouchableOpacity>
                 </View>
             </View>
         </View>
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#007AFF",
         padding: 8,
         borderRadius: 6,
-        textAlign: "center",
+        alignItems: "center",
     },
     copyButtonText: {
         color: "#FFFFFF",
@@ -101,14 +103,9 @@ const styles = StyleSheet.create({
         backgroundColor: "#FF3B30",
         padding: 8,
         borderRadius: 6,
-        textAlign: "center",
+        alignItems: "center",
         marginTop: 10,
-    },
-    deleteButtonText: {
-        color: "#FF0000",
-        fontWeight: "bold",
-        fontSize: 16,
     },
 });
 
-export default ClipboardItem;;
+export default ClipboardItem;

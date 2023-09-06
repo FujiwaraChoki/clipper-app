@@ -1,5 +1,12 @@
 const { initializeApp } = require('firebase/app');
-const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } = require('firebase/auth');
+const {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    updateProfile
+} = require('firebase/auth');
+
+require('dotenv').config();
 
 const firebaseConfig = {
     apiKey: process.env['API_KEY'],
