@@ -13,14 +13,22 @@ Clipper is a cross-platform clipboard history app that allows you to view your c
 3. Install dependencies:
    `npm install`
 
-## Usage
+## Usage - Native
 
 Before running the app, make sure you have Node.js and npm installed on your system.
 
-1. Start the development server:
+1. Start the development server in the `frontend_native` directory::
    `npx expo start`
 
 2. Follow the instructions to open the app on your desired platform (iOS/Android).
+
+## Usage - Web
+
+1. Install `http` server in the `frontend_web` directory::
+   `npm install http-server -g`
+
+2. Start the server:
+   `http-server`
 
 ## Features
 
