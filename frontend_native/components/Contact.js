@@ -32,7 +32,6 @@ const Contact = () => {
             });
 
             if (response.status === 200) {
-                // Successful submission
                 Alert.alert('Success', 'Your message has been sent successfully.');
                 setFormData({
                     name: '',
@@ -40,7 +39,6 @@ const Contact = () => {
                     message: '',
                 });
             } else {
-                // Handle errors
                 Alert.alert('Error', 'There was an error sending your message. Please try again later.');
             }
         } catch (error) {
