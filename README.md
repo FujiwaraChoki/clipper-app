@@ -29,7 +29,7 @@ Before running the app, make sure you have Node.js and npm installed on your sys
 - Built with React Native for a smooth and responsive user experience.
 - Firebase User Authentication for secure login.
 
-## Meet the Developer
+## Author
 
 This app was created by Sami Hindi. You can connect with him on [GitHub](https://github.com/fujiwarachoki) for any questions or feedback.
 
