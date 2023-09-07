@@ -24,7 +24,7 @@ Before running the app, make sure you have Node.js and npm installed on your sys
 
 ## Usage - Web
 
-1. Install `http` server in the `frontend_web` directory::
+1. Install `http-server` in the `frontend_web` directory::
    `npm install http-server -g`
 
 2. Start the server:
