@@ -18,7 +18,7 @@ Clipper is a cross-platform clipboard history app that allows you to view your c
 Before running the app, make sure you have Node.js and npm installed on your system.
 
 1. Start the development server:
-   `npm start`
+   `npx expo start`
 
 2. Follow the instructions to open the app on your desired platform (iOS/Android).
 
