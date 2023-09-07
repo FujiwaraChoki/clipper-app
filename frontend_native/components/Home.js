@@ -14,6 +14,8 @@ const Home = () => {
     const navigate = useNavigate();
     const [user, setUser] = useContext(UserContext);
 
+    const ip = '172.25.0.1';
+
     const getClipboard = async () => {
         const clipboard = await Clipboard.getStringAsync();
         setNewHistoryItem(clipboard);
@@ -22,7 +24,7 @@ const Home = () => {
     const callHistoryApi = async () => {
         if (!user.uid) return;
         try {
-            await fetch(`http://192.168.1.14:3000/history/${user.uid}`)
+            await fetch(`http://${ip}:3000/history/${user.uid}`)
                 .then((res) => res.json())
                 .then((data) => {
                     console.log('History:', data);
@@ -49,7 +51,7 @@ const Home = () => {
                 date: new Date().toLocaleString(),
             });
 
-            await fetch('http://192.168.1.14:3000/history', {
+            await fetch(`http://${ip}:3000/history`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

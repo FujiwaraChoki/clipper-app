@@ -12,9 +12,11 @@ const Login = () => {
     const [user, setUser] = useContext(UserContext);
     const navigate = useNavigate();
 
+    const ip = '172.25.0.1';
+
     const handleLogin = async () => {
         try {
-            const response = await fetch('http://192.168.1.14:3000/user/login', {
+            const response = await fetch(`http://${ip}:3000/user/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

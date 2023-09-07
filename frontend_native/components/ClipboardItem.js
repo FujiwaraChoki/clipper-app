@@ -12,6 +12,8 @@ const ClipboardItem = ({ item, historyState }) => {
     const [user, setUser] = useContext(UserContext);
     const { history, setHistory } = historyState;
 
+    const ip = '172.25.0.1';
+
     const copyToClipboard = async () => {
         await Clipboard.setStringAsync(text);
     };
@@ -37,7 +39,7 @@ const ClipboardItem = ({ item, historyState }) => {
                         onPress={async () => {
                             setState('Deleting...');
 
-                            const response = await fetch(`http://192.168.1.14:3000/history/${user.uid}/${item.id}`, {
+                            const response = await fetch(`http://${ip}:3000/history/${user.uid}/${item.id}`, {
                                 method: 'DELETE',
                             }).then((res) => res.json()).catch((err) => console.log(err));
 
