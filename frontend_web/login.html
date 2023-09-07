@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clipper - Web Frontend</title>
+    <!-- Include Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Style for sticky footer */
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+    <nav class="bg-blue-500 p-4">
+        <div class="container mx-auto">
+            <h1 class="text-2xl text-white">Clipper - Web Frontend</h1>
+        </div>
+    </nav>
+
+    <main class="container mx-auto py-8 px-8">
+        <h2 class="text-3xl font-semibold mb-4">Clipper is an app to store and view your clipboard history across
+            devices.</h2>
+
+        <div class="mb-4">
+            <h3 class="text-xl font-semibold mb-2">Login</h3>
+            <form id="login-form">
+                <div class="mb-2">
+                    <label for="login-email" class="block text-lg font-semibold">Email</label>
+                    <input type="text" id="login-email" name="login-email" class="w-full p-2 border rounded">
+                    <label for="login-password" class="block text-lg font-semibold">Password</label>
+                    <input type="password" id="login-password" name="login-password" class="w-full p-2 border rounded">
+                </div>
+                <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+                    id="login-btn">Login</button>
+            </form>
+        </div>
+    </main>
+
+    <footer class="bg-blue-500 p-4 mt-auto">
+        <div class="container mx-auto">
+            <p class="text-white text-center">&copy; 2023 Clipper - Web Frontend</p>
+        </div>
+    </footer>
+
+    <script>
+        const loginButton = document.getElementById("login-btn");
+        const ip = "192.168.1.14";
+
+        loginButton.addEventListener("click", async () => {
+            const response = await fetch(`http://${ip}:3000/user/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: document.getElementById("login-email").value,
+                    password: document.getElementById("login-password").value
+                })
+            }).then(response => response.json());
+
+            if (response.uid) {
+                localStorage.setItem("uid", response.uid);
+                window.location.href = "index.html";
+            } else {
+                alert("Login failed");
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -26,66 +26,103 @@
 </head>
 
 <body class="bg-gray-100">
-    <!-- Navbar -->
     <nav class="bg-blue-500 p-4">
         <div class="container mx-auto">
             <h1 class="text-2xl text-white">Clipper - Web Frontend</h1>
         </div>
     </nav>
 
-    <!-- Content -->
-    <main class="container mx-auto py-8">
+    <main class="container mx-auto py-8 px-8">
         <h2 class="text-3xl font-semibold mb-4">Clipper is an app to store and view your clipboard history across
             devices.</h2>
-
-        <div class="mb-4">
-            <label for="uid" class="block text-lg font-semibold">UID:</label>
-            <input type="text" id="uid" name="uid" class="w-full p-2 border rounded">
-        </div>
 
         <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
             id="get-history-btn">Get history</button>
 
         <h2 class="text-2xl font-semibold mt-4">History</h2>
         <ul id="history" class="list-inside list-decimal">
-            <!-- Your history items will be populated here -->
         </ul>
 
-        <div>
-            <button>Add clipboard to History</button>
+        <div class="mt-2">
+            <button id="add-to-history"
+                class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">Add clipboard to
+                History</button>
+            <button id="logout-btn"
+                class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded">Logout</button>
         </div>
     </main>
 
-    <!-- Sticky Footer -->
     <footer class="bg-blue-500 p-4 mt-auto">
         <div class="container mx-auto">
             <p class="text-white text-center">&copy; 2023 Clipper - Web Frontend</p>
         </div>
     </footer>
 
-    <!-- JavaScript -->
     <script>
         const uidInput = document.getElementById("uid");
         const historyList = document.getElementById("history");
         const getHistoryButton = document.getElementById("get-history-btn");
-        const ip = "localhost";
+        const addToHistory = document.getElementById("add-to-history");
+        const logoutButton = document.getElementById("logout-btn");
+        const ip = "192.168.1.14";
+
+        if (!localStorage.getItem("uid")) {
+            window.location.href = "login.html";
+        }
+
+        logoutButton.addEventListener("click", () => {
+            localStorage.removeItem("uid");
+            window.location.href = "login.html";
+        });
 
         getHistoryButton.addEventListener("click", async () => {
-            const uid = uidInput.value;
+            const uid = localStorage.getItem("uid");
+            try {
+                const response = await fetch(`http://${ip}:3000/history/?uid=${uid}`)
+                    .then(response => response.json());
 
-            await fetch(`http://${ip}:3000/history/${uid}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Clear existing list items
-                    historyList.innerHTML = "";
+                const data = response.items;
 
-                    // Populate history list
-                    data.forEach(element => {
-                        const li = document.createElement("li");
-                        li.textContent = element;
-                        historyList.appendChild(li);
-                    });
+                console.log(data);
+
+                historyList.innerHTML = "";
+
+                data.forEach((element) => {
+                    console.log(element.text);
+                    const li = document.createElement("li");
+                    li.textContent = element.text;
+                    historyList.appendChild(li);
                 });
+            } catch (error) {
+                console.error("Error fetching history:", error);
+            }
+        });
+
+        addToHistory.addEventListener("click", async () => {
+            const uid = localStorage.getItem("uid");
+            const clipboardContent = await navigator.clipboard
+                .readText().then(clipboardContent => {
+                    console.log(clipboardContent);
+                    return clipboardContent;
+                });
+
+            try {
+                await fetch(`http://${ip}:3000/history/?uid=${uid}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        item: {
+                            text: clipboardContent,
+                            date: new Date().toLocaleDateString()
+                        },
+                        uid: uid
+                    })
+                });
+            } catch (error) {
+                console.error("Error adding to history:", error);
+            }
         });
     </script>
 </body>

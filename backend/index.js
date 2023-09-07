@@ -1,10 +1,12 @@
-const express = require('express');
+const cors = require('cors');
 const fs = require('fs/promises');
+const express = require('express');
 const bodyParser = require('body-parser');
 const { getUser, createUser, login } = require('./firebase');
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors());
 
 const DATABASE_FILE = 'database.json';
 
@@ -31,7 +33,6 @@ app.get('/user/:uid', async (req, res) => {
     const { uid } = req.params;
 
     try {
-        const data = await readData();
         const user = getUser(uid);
 
         if (user) {
@@ -51,7 +52,6 @@ app.post('/user/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const data = await readData();
         const user = await login(email, password);
 
         if (user) {
@@ -133,22 +133,22 @@ app.post('/user', async (req, res) => {
     }
 });
 
-app.get('/history/:uid', async (req, res) => {
+app.get('/history', async (req, res) => {
     console.log('GET /history');
 
-    const { uid } = req.params;
+    const { uid } = req.query;
 
     try {
         const data = await readData();
-        const userHistory = data.history.find((item) => item.uid === uid);
+        const userHistory = data.history.find((h) => h.uid === uid);
+        const historyItems = userHistory ? userHistory.items : [];
 
         if (!userHistory) {
-            // If the user's history collection doesn't exist, create it
-            data.history.push({ uid, items: [] });
+            data.history.push({ uid, items: historyItems });
             await writeData(data);
         }
 
-        return res.status(200).json(userHistory ? userHistory.items : []);
+        return res.status(200).json({ items: historyItems });
     } catch (error) {
         console.error('Error fetching history:', error);
         return res.status(500).send('Error fetching history');

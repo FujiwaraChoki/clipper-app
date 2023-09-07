@@ -3,6 +3,26 @@
   "history": [
     {
       "uid": "p5j473dok4XwUzcNlmevaAsIi7Y2",
+      "items": [
+        {
+          "text": "p5j473dok4XwUzcNlmevaAsIi7Y2",
+          "date": "7.9.2023"
+        },
+        {
+          "text": "npm install cors",
+          "date": "7.9.2023"
+        },
+        {
+          "text": "\r\n            const uid = localStorage.getItem(\"uid\");",
+          "date": "7.9.2023"
+        },
+        {
+          "text": "red",
+          "date": "7.9.2023"
+        }
+      ]
+    },
+    {
       "items": []
     }
   ]
